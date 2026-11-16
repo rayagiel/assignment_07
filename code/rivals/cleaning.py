@@ -35,8 +35,8 @@ def clean_price(text: str) -> float:
     - Remove the dollar sign and any commas with `.replace()`.
     - `.strip()` the spaces, then convert with `float()`.
     """
-    # TODO: your code here
-    pass
+    clean = text.replace("$", "").replace(",", "").strip()
+    return float(clean)
 
 
 def clean_card_lines(text: str) -> list[str]:
@@ -56,7 +56,14 @@ def clean_card_lines(text: str) -> list[str]:
     - Otherwise append it to a list, and return the list.
     """
     # TODO: your code here
-    pass
+    split1 = text.split("\n")
+    result = []
+    for line in split1:
+        if len(line) > 0:
+            line = line.strip()
+            if not all(w in NOISE for w in line.split()):
+                result.append(line)
+    return result
 
 
 def parse_price_line(line: str) -> list[tuple[str, float]]:
@@ -79,8 +86,15 @@ def parse_price_line(line: str) -> list[tuple[str, float]]:
     - Loop over the matches. Use "Each" when size is "", and `clean_price()` on the
       price. Return the list of pairs.
     """
-    # TODO: your code here
-    pass
+    matches = re.findall(r"([SML])?\s*(\$[\d.,]+)", line)
+    result = []
+    for size, price in matches:
+        if size == "":
+            size = 'Each'
+        cleaned_price = clean_price(price)
+        pair = (size, cleaned_price)
+        result.append(pair)
+    return result
 
 
 def card_rows(cafe: str, category: str, card_text: str) -> list[dict]:
@@ -100,5 +114,18 @@ def card_rows(cafe: str, category: str, card_text: str) -> list[dict]:
     - `parse_price_line()` the price line, and build one dict per (size, price)
       pair with the five keys above. Return the list.
     """
-    # TODO: your code here
-    pass
+    results = []
+    clean_lines = clean_card_lines(card_text)
+    item = clean_lines[0]
+    for line in clean_lines:
+        parsed_line = parse_price_line(line)
+        for size, price in parsed_line:
+            row = {
+                "cafe": cafe,
+                "category": category,
+                "item": item,
+                "size": size,
+                "price": price
+                }
+            results.append(row)
+    return results
