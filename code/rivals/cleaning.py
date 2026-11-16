@@ -55,7 +55,6 @@ def clean_card_lines(text: str) -> list[str]:
     - Skip it if every word in it is in NOISE: `all(w in NOISE for w in line.split())`.
     - Otherwise append it to a list, and return the list.
     """
-    # TODO: your code here
     split1 = text.split("\n")
     result = []
     for line in split1:
