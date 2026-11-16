@@ -20,8 +20,6 @@ tests/test_pipeline.py says how it is checked.
 import pandas as pd
 
 from .settings import (
-    CATEGORIES_FILE,
-    MENU_COLUMNS,
     OUR_CAFE,
     OUR_MENU_FILE,
 )
@@ -46,7 +44,7 @@ def menus_table(rows: list[dict]) -> pd.DataFrame:
     Extra keys a scraper might add are left out. An empty list gives an empty
     table that still has the five columns.
     """
-    df = pd.DataFrame(rows, columns = ["cafe", "category", "item", "size", "price"])
+    df = pd.DataFrame(rows, columns=["cafe", "category", "item", "size", "price"])
     return df
 
 

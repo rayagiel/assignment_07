@@ -144,8 +144,18 @@ def gap_analysis(menus: pd.DataFrame) -> pd.DataFrame:
     cleaned_menus = menus[menus["canonical"].notna()]
     ours = (cleaned_menus[cleaned_menus["cafe"] == OUR_CAFE][["canonical", "kind"]].
             drop_duplicates())
-    theirs = (cleaned_menus[cleaned_menus["cafe"] != OUR_CAFE]).groupby(["canonical", "kind"])["cafe"].agg(rivals="nunique", sold_by=lambda s: ", ".join(sorted(s.unique()))).reset_index()
-    merged = pd.merge(ours, theirs, how='outer', on=["canonical", "kind"], indicator=True)
+    theirs = (
+        cleaned_menus[cleaned_menus["cafe"] != OUR_CAFE]
+        .groupby(["canonical", "kind"])["cafe"]
+        .agg(
+            rivals="nunique",
+            sold_by=lambda s: ", ".join(sorted(s.unique())),
+        )
+        .reset_index()
+    )
+    merged = pd.merge(
+        ours, theirs, how="outer", on=["canonical", "kind"], indicator=True
+    )
     merged["where"] = ""
     merged.loc[merged["_merge"] == "left_only", "where"] = "only us"
     merged.loc[merged["_merge"] == "right_only", "where"] = "only them"

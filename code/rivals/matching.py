@@ -28,7 +28,6 @@ from rapidfuzz import fuzz, process
 
 from .settings import (
     AUTO_MATCH,
-    DECISION_COLUMNS,
     FILLER_WORDS,
     NEW_ITEM,
     OUR_CAFE,
@@ -227,7 +226,7 @@ def record_decision(decisions: pd.DataFrame, cafe: str, item: str,
     kept = decisions[(decisions["cafe"] != cafe) | (decisions["item"] != item)]
     new_answer = pd.DataFrame([{"cafe": cafe, "item": item, "matched_to": matched_to}])
     if len(kept) > 0:
-      result = pd.concat([kept, new_answer], ignore_index=True)
+        result = pd.concat([kept, new_answer], ignore_index=True)
     else:
-      result = new_answer.reset_index(drop=True)
+        result = new_answer.reset_index(drop=True)
     return result

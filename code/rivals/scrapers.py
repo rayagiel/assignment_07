@@ -95,7 +95,7 @@ def scrape_hilltop(page) -> list[dict]:
         table = table.drop(columns="Description")
         melted = table.melt(id_vars="Item", var_name="size", value_name="price")
         for row in melted.itertuples():
-            row ={
+            row = {
                 "cafe": "Hilltop Grind",
                 "category": category,
                 "item": row.Item,

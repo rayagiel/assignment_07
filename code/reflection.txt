@@ -1,8 +1,17 @@
-Write your reflection here.
+I learned how to scrape websites in this assignment. I was able to use playwright and codegen.
+The biggest thing I learned was how to inspect a webpage. I learned that I need to highlight
+the text, click inspect, copy the selector, and paste it into my code. I learned that I 
+can use .inner_text() to scrape the text from the web page and save it as a variable.
 
-See reflection.md for what makes a good reflection — be specific, use the
-terminology from this assignment (HTML element, CSS selector, class and id
-selectors, sibling selector, inner_text, attribute, headless browser, waiting for
-JavaScript, crawling, pagination, read_html, melt, fuzzy matching, normalization,
-threshold, human in the loop, merge indicator, gap analysis), and make it
-actionable.
+I struggled with the gap analysis. I was unsure of what to do and how to create the "rivals" 
+and "sold_by" columns. I figured out that I needed to use groupby with an agg func, use an outer merge,
+then create the "where" column using "__merge", and sort the data before I could return the output. I also struggled 
+with understanding what some of the functions and docstrings were asking for. I worked through
+this by using the tests to see what the expected outcome was. The tests also showed me 
+exactly where my code was failing. For example, I initially wrote my code using a for loop
+when I was supposed to be using pandas so I had to redo that section of my code.
+
+I am going to pay more attention to the docstrings and instructions next time. I believe
+having a better understanding of the expectations will help me write the function. I am 
+going to use clearer variable names as well. I believe having better variable names will
+make it easier for me to understand each step of my code. 

@@ -13,8 +13,10 @@ Test it: pytest tests/test_pipeline.py -k analysis_page
 
 import os
 
+
 import pandas as pd
 import streamlit as st
+
 
 from rivals import (
     ABOVE_ALL,
@@ -47,9 +49,6 @@ st.title("Salt City: Prices and Gaps")
 if not os.path.exists(MENUS_FILE):
     st.info("No menus yet — scrape them on the Scrape page first.")
     st.stop()
-
-    st.info("Menus do not exist")
-    st.stop()
 #    menus, decisions and matches exactly as on the Review Matches page.
 menus = pd.read_csv(MENUS_FILE)
 if os.path.exists(DECISIONS_FILE):
@@ -62,8 +61,10 @@ matches = match_items(menus, decisions)
 unreviewed = matches[matches['status'] == "unreviewed"]
 if len(unreviewed) > 0:
     num = len(unreviewed)
-    st.warning(f"There are {num} unreviewed items. They are left out. Please review them"
-               "on the Review Matches Page")
+    st.warning(
+        f"There are {num} unreviewed items. They are left out. "
+        "Please review them on the Review Matches Page."
+    )
 
 # 2. THE ANALYSIS (all of it is in the package — the page only calls it)
 #    menus <- add_canonical(menus, matches)
@@ -76,29 +77,33 @@ comparison = compare_prices(prices)
 gaps = gap_analysis(menus)
 #
 # 3. TWO TABS: st.tabs(["Prices", "Gaps"])
-prices_tab, gaps_tab = st.tabs("Prices", "Gaps")
+prices_tab, gaps_tab = st.tabs(["Prices", "Gaps"])
 # 4. THE PRICES TAB (inside `with prices_tab:`)
 with prices_tab:
-    col1, col2 = st.column(2)
+    col1, col2 = st.columns(2)
 #    a. Two metrics side by side: "Priced below the market" (rows of comparison
 #       whose our_position is BELOW_ALL or BELOW_AVERAGE — .isin([...])) and "Priced
 #       above the market" (ABOVE_ALL or ABOVE_AVERAGE). Use the names from rivals,
 #       not the text: the labels start with emoji.
     with col1:
-        below = len(comparison[comparison["our_price"]].isin(BELOW_ALL, BELOW_AVERAGE))
-        st.metric("Priced Below the market", below)
+        below = len(
+            comparison[comparison["our_position"].isin([BELOW_ALL, BELOW_AVERAGE])]
+        )
+        st.metric("Priced below the market", below)
     with col2:
-        above = len(comparison[comparison["our_price"]].isin(ABOVE_ALL, ABOVE_AVERAGE))
-        st.metric("Priced Above the market", above)
+        above = len(
+            comparison[comparison["our_position"].isin([ABOVE_ALL, ABOVE_AVERAGE])]
+        )
+        st.metric("Priced above the market", above)
 #    b. products <- st.multiselect("Products", the sorted unique canonical names
 #       in comparison, key="products", placeholder="All products")
-    names = list(comparison[comparison["canonical"]].nunique())
+    names = names = list(comparison["canonical"].unique())
     product = st.multiselect("Products", names, placeholder="ALL products")
 #    c. shown <- the rows of comparison whose canonical is in products — or all of
 #       comparison when nothing is picked (an empty multiselect means "all").
 #       st.dataframe(shown, hide_index=True)
     if product:
-        shown = comparison[comparison["canonical"] == product]
+        shown = comparison[comparison["canonical"].isin(product)]
     else:
         shown = comparison
     st.dataframe(shown, hide_index=True)
